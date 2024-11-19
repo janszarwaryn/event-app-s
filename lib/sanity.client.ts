@@ -7,13 +7,12 @@ export const client = createClient({
   useCdn: process.env.NODE_ENV === 'production',
 })
 
-// Pobierz 3 losowe wydarzenia do sekcji Featured
 export async function getFeaturedEvents() {
-  return client.fetch(`
+  const events = await client.fetch(`
     *[_type == "event"] | order(_createdAt desc) [0...3] {
       _id,
       title,
-      "slug": slug,
+      "slug": slug.current,
       description,
       date,
       capacity,
@@ -23,15 +22,23 @@ export async function getFeaturedEvents() {
       isFeatured
     }
   `)
+
+  if (!events) {
+    return []
+  }
+
+  return events.map(event => ({
+    ...event,
+    slug: { current: event.slug || `event-${event._id}` }
+  }))
 }
 
-// Pobierz wszystkie wydarzenia do strony /events
 export async function getAllEvents() {
-  return client.fetch(`
+  const events = await client.fetch(`
     *[_type == "event"] | order(date asc) {
       _id,
       title,
-      "slug": slug,
+      "slug": slug.current,
       description,
       date,
       capacity,
@@ -41,16 +48,24 @@ export async function getAllEvents() {
       isFeatured
     }
   `)
+
+  if (!events) {
+    return []
+  }
+
+  return events.map(event => ({
+    ...event,
+    slug: { current: event.slug || `event-${event._id}` }
+  }))
 }
 
-// Pobierz 3 najbliższe wydarzenia do sekcji Upcoming
 export async function getUpcomingEvents() {
   const today = new Date().toISOString()
-  return client.fetch(`
+  const events = await client.fetch(`
     *[_type == "event" && date > $today] | order(date asc) [0...3] {
       _id,
       title,
-      "slug": slug,
+      "slug": slug.current,
       description,
       date,
       capacity,
@@ -60,11 +75,18 @@ export async function getUpcomingEvents() {
       isFeatured
     }
   `, { today })
+
+  return events || []
 }
 
-// Helper do pobierania pojedynczego wydarzenia
 export async function getEvent(slug: string) {
-  return client.fetch(`
+  console.log('Fetching event with slug:', slug)
+
+  if (!slug) {
+    return null
+  }
+
+  const event = await client.fetch(`
     *[_type == "event" && slug.current == $slug][0] {
       _id,
       title,
@@ -78,9 +100,17 @@ export async function getEvent(slug: string) {
       isFeatured
     }
   `, { slug })
+
+  if (!event) {
+    return null
+  }
+
+  return {
+    ...event,
+    slug: { current: event.slug || `event-${event._id}` }
+  }
 }
 
-// Helper do pobierania wydarzeń
 export async function getEvents() {
   return client.fetch(`
     *[_type == "event"] {

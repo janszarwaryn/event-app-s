@@ -4,12 +4,28 @@ import { Button } from "@/components/ui/button"
 import { Calendar, MapPin, Users, Share2, BookmarkPlus } from "lucide-react"
 import Image from "next/image"
 import { formatDistanceToNow } from 'date-fns'
+import { notFound } from 'next/navigation'
 
-export default async function EventPage({ params }: { params: { slug: string } }) {
+interface EventPageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export default async function EventPage({ params }: EventPageProps) {
+  console.log('Event page params:', params)
+
+  if (!params.slug) {
+    console.log('No slug provided')
+    notFound()
+  }
+
   const event = await getEvent(params.slug)
+  console.log('Fetched event:', event)
 
   if (!event) {
-    return <div>Event not found</div>
+    console.log('Event not found')
+    notFound()
   }
 
   return (
