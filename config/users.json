@@ -1,0 +1,39 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "admin1",
+      "password": "hashed_password_here",
+      "role": "ADMIN",
+      "name": "Admin User"
+    },
+    {
+      "id": "2",
+      "username": "admin2",
+      "password": "hashed_password_here",
+      "role": "ADMIN",
+      "name": "Second Admin"
+    },
+    {
+      "id": "3",
+      "username": "user1",
+      "password": "hashed_password_here",
+      "role": "USER",
+      "name": "Regular User 1"
+    },
+    {
+      "id": "4",
+      "username": "user2",
+      "password": "hashed_password_here",
+      "role": "USER",
+      "name": "Regular User 2"
+    },
+    {
+      "id": "5",
+      "username": "user3",
+      "password": "hashed_password_here",
+      "role": "USER",
+      "name": "Regular User 3"
+    }
+  ]
+} 
