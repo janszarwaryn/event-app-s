@@ -1,15 +1,15 @@
-import { HeroSection } from "@/components/hero-section";
-import { FeaturedEvents } from "@/components/featured-events";
-import { UpcomingEvents } from "@/components/upcoming-events";
-import { AuthCTA } from "@/components/auth-cta";
+import { FeaturedEventsWrapper } from '@/components/featured-events-wrapper'
+import { UpcomingEvents } from '@/components/upcoming-events'
+import { AuthCTA } from '@/components/auth-cta'
+import { HeroSection } from '@/components/hero-section'
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <>
+    <main className="min-h-screen">
       <HeroSection />
-      <FeaturedEvents />
+      <FeaturedEventsWrapper />
       <UpcomingEvents />
       <AuthCTA />
-    </>
-  );
+    </main>
+  )
 }

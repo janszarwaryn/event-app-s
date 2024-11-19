@@ -37,4 +37,20 @@ export async function getEvent(slug: string) {
       "imageUrl": image.asset->url
     }
   `, { slug })
+}
+
+// Helper do pobierania wyróżnionych wydarzeń
+export async function getFeaturedEvents() {
+  return client.fetch(`
+    *[_type == "event" && isFeatured == true] {
+      _id,
+      title,
+      slug,
+      description,
+      date,
+      capacity,
+      location,
+      "imageUrl": image.asset->url
+    } | order(date asc)
+  `)
 } 

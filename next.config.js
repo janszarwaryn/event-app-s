@@ -4,7 +4,10 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  images: { unoptimized: true },
+  images: {
+    unoptimized: true,
+    domains: ['cdn.sanity.io', 'images.unsplash.com'],
+  },
 };
 
 module.exports = nextConfig;
