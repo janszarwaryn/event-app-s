@@ -44,12 +44,10 @@ export default {
       validation: (Rule: any) => Rule.required()
     },
     {
-      name: 'image',
-      title: 'Image',
-      type: 'image',
-      options: {
-        hotspot: true,
-      }
+      name: 'imageUrl',
+      title: 'Image URL',
+      type: 'url',
+      description: 'Enter the URL of the event image'
     },
     {
       name: 'category',
@@ -57,12 +55,14 @@ export default {
       type: 'string',
       options: {
         list: [
-          { title: 'Conference', value: 'Conference' },
-          { title: 'Workshop', value: 'Workshop' },
-          { title: 'Meetup', value: 'Meetup' },
-          { title: 'Webinar', value: 'Webinar' }
-        ]
-      }
+          {title: 'Conference', value: 'Conference'},
+          {title: 'Workshop', value: 'Workshop'},
+          {title: 'Meetup', value: 'Meetup'},
+          {title: 'Webinar', value: 'Webinar'}
+        ],
+        layout: 'radio'
+      },
+      validation: (Rule: any) => Rule.required()
     },
     {
       name: 'isFeatured',
@@ -71,5 +71,12 @@ export default {
       description: 'Set to true to show this event in the featured section',
       initialValue: false
     }
-  ]
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      subtitle: 'category',
+      media: 'imageUrl'
+    }
+  }
 } 

@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { Event } from "@/lib/types";
@@ -21,9 +22,13 @@ export default function FeaturedEvents({ events }: FeaturedEventsProps) {
             Discover our handpicked selection of must-attend tech events.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-          {events.map((event) => (
-            <Link href={`/events/${event.slug.current}`} key={event._id} className="w-full max-w-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center mb-8">
+          {events?.map((event) => (
+            <Link 
+              href={`/events/${event.slug.current}`}
+              key={event._id} 
+              className="w-full max-w-sm"
+            >
               <Card className="overflow-hidden hover:shadow-lg transition-shadow group h-full">
                 <div className="aspect-video relative overflow-hidden">
                   <Image
@@ -39,7 +44,9 @@ export default function FeaturedEvents({ events }: FeaturedEventsProps) {
                 </div>
                 <CardHeader>
                   <CardTitle>{event.title}</CardTitle>
-                  <CardDescription>{event.description}</CardDescription>
+                  <CardDescription className="line-clamp-2">
+                    {event.description}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-col space-y-2 text-sm text-muted-foreground">
@@ -66,6 +73,13 @@ export default function FeaturedEvents({ events }: FeaturedEventsProps) {
               </Card>
             </Link>
           ))}
+        </div>
+        <div className="text-center">
+          <Link href="/events">
+            <Button size="lg" variant="outline">
+              View All Events
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
