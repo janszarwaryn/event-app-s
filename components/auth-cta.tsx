@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 export function AuthCTA() {
   return (
     <section className="py-20 bg-primary text-primary-foreground">
-      <div className="container text-center">
+      <div className="container text-center justify-self-center">
         <h2 className="text-3xl font-bold tracking-tight mb-4">
           Ready to Join the Tech Community?
         </h2>

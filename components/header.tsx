@@ -27,7 +27,7 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center justify-center">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="font-bold text-xl">TechMeet</span>
+            <span className="font-bold text-xl ml-10">TechMeet</span>
           </Link>
         </div>
 

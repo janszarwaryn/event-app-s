@@ -4,8 +4,8 @@ import { Github, Twitter, Linkedin } from "lucide-react";
 export function Footer() {
   return (
     <footer className="w-full border-t bg-background">
-      <div className="container py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto text-center md:text-left">
+      <div className="container py-12 justify-self-center">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto text-center md:text-left justify-items-center">
           <div>
             <h3 className="font-semibold text-lg mb-4">TechMeet</h3>
             <p className="text-sm text-muted-foreground">
@@ -59,7 +59,7 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <div className="container py-6 border-t">
+      <div className="container py-6 border-t justify-self-center">
         <div className="flex justify-center items-center">
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} TechMeet. All rights reserved.
