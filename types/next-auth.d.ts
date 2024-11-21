@@ -8,7 +8,8 @@ declare module "next-auth" {
       name: string
       username: string
       role: "ADMIN" | "USER"
-    } & DefaultSession["user"]
+      email: string | null
+    }
   }
 
   interface User {
@@ -16,6 +17,7 @@ declare module "next-auth" {
     name: string
     username: string
     role: "ADMIN" | "USER"
+    email: string | null
   }
 }
 

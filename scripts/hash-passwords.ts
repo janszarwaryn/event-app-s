@@ -1,69 +1,39 @@
-const bcrypt = require('bcryptjs');
-const fs = require('fs');
-const path = require('path');
+import { hash } from 'bcryptjs';
+import * as fs from 'fs';
+import * as path from 'path';
 
-const defaultUsers = [
+const users = [
   {
-    id: "1",
-    username: "admin1",
-    password: "admin123", // plain password to hash
-    role: "ADMIN",
-    name: "Admin User"
+    id: '1',
+    username: 'admin',
+    password: 'admin123',
+    name: 'Administrator',
+    role: 'ADMIN'
   },
   {
-    id: "2",
-    username: "admin2",
-    password: "admin456", // plain password to hash
-    role: "ADMIN",
-    name: "Second Admin"
+    id: '2',
+    username: 'user1',
+    password: 'user123',
+    name: 'Regular User 1',
+    role: 'USER'
   },
-  {
-    id: "3",
-    username: "user1",
-    password: "user123", // plain password to hash
-    role: "USER",
-    name: "Regular User 1"
-  },
-  {
-    id: "4",
-    username: "user2",
-    password: "user456", // plain password to hash
-    role: "USER",
-    name: "Regular User 2"
-  },
-  {
-    id: "5",
-    username: "user3",
-    password: "user789", // plain password to hash
-    role: "USER",
-    name: "Regular User 3"
-  }
+  // Dodaj więcej użytkowników według potrzeb
 ];
 
 async function hashPasswords() {
-  try {
-    const usersPath = path.join(process.cwd(), "config", "users.json");
-    
-    const hashedUsers = await Promise.all(
-      defaultUsers.map(async (user) => ({
-        ...user,
-        password: await bcrypt.hash(user.password, 10)
-      }))
-    );
+  const hashedUsers = await Promise.all(
+    users.map(async (user) => ({
+      ...user,
+      password: await hash(user.password, 12)
+    }))
+  );
 
-    fs.writeFileSync(
-      usersPath,
-      JSON.stringify({ users: hashedUsers }, null, 2)
-    );
+  fs.writeFileSync(
+    path.join(process.cwd(), 'config', 'users.json'),
+    JSON.stringify({ users: hashedUsers }, null, 2)
+  );
 
-    console.log("✅ Passwords hashed successfully!");
-    console.log("📝 Demo credentials:");
-    console.log("Admin: admin1 / admin123");
-    console.log("User: user1 / user123");
-  } catch (error) {
-    console.error("Error hashing passwords:", error);
-    process.exit(1);
-  }
+  console.log('Users file created with hashed passwords!');
 }
 
 hashPasswords(); 
