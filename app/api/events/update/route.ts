@@ -17,50 +17,20 @@ export async function PUT(request: Request) {
 
     const event = await request.json()
 
-    // Sprawdź czy event istnieje i pobierz informacje o twórcy
-    const existingEvent = await client.fetch(
-      `*[_type == "event" && _id == $id][0]{
-        ...,
-        "createdBy": createdBy._ref
-      }`,
-      { id: event._id }
-    )
-
-    if (!existingEvent) {
-      return NextResponse.json(
-        { error: 'Event not found' },
-        { status: 404 }
-      )
-    }
-
-    // Sprawdź uprawnienia
-    const isAdmin = session.user.role === 'ADMIN'
-    const isOwner = existingEvent.createdBy === session.user.id
-
-    if (!isAdmin && !isOwner) {
-      return NextResponse.json(
-        { error: 'You can only edit your own events' },
-        { status: 403 }
-      )
-    }
-
-    // Przygotuj dane do aktualizacji
-    const updates = {
-      title: event.title,
-      description: event.description,
-      date: new Date(event.date).toISOString(),
-      location: event.location,
-      capacity: parseInt(event.capacity),
-      category: event.category,
-      imageUrl: event.imageUrl,
-      // Tylko admin może zmieniać status featured
-      ...(isAdmin && { isFeatured: event.isFeatured })
-    }
-
     // Zaktualizuj dokument w Sanity
     const result = await client
       .patch(event._id)
-      .set(updates)
+      .set({
+        title: event.title,
+        description: event.description,
+        date: new Date(event.date).toISOString(),
+        location: event.location,
+        capacity: parseInt(event.capacity),
+        category: event.category,
+        imageUrl: event.imageUrl,
+        // Tylko admin może zmieniać status featured
+        ...(session.user.role === 'ADMIN' && { isFeatured: event.isFeatured })
+      })
       .commit()
 
     // Pobierz zaktualizowany event z pełnymi danymi

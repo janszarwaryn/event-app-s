@@ -17,7 +17,6 @@ const users = [
     name: 'Regular User 1',
     role: 'USER'
   },
-  // Dodaj więcej użytkowników według potrzeb
 ];
 
 async function hashPasswords() {
@@ -36,4 +35,4 @@ async function hashPasswords() {
   console.log('Users file created with hashed passwords!');
 }
 
-hashPasswords(); 
+hashPasswords();
