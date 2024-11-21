@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
+import { UserMenu } from "@/components/user-menu";
 
 export function Header() {
   return (
@@ -36,9 +37,7 @@ export function Header() {
 
           <div className="flex items-center gap-4">
             <ModeToggle />
-            <Button asChild>
-              <Link href="/auth">Sign In</Link>
-            </Button>
+            <UserMenu />
           </div>
         </div>
       </div>

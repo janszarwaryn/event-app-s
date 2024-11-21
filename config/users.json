@@ -3,37 +3,37 @@
     {
       "id": "1",
       "username": "admin1",
-      "password": "hashed_password_here",
+      "password": "$2a$10$rUCvhtr2rV8JsDsIqbEKzuvwQ03gt93QGtfxhqGTSd6HnXianI9kG",
       "role": "ADMIN",
       "name": "Admin User"
     },
     {
       "id": "2",
       "username": "admin2",
-      "password": "hashed_password_here",
+      "password": "$2a$10$OKwoVyauh8jl7K4Cwco6MeH8H0z0GeExmmguqWFlzwKB2vpE6gj6q",
       "role": "ADMIN",
       "name": "Second Admin"
     },
     {
       "id": "3",
       "username": "user1",
-      "password": "hashed_password_here",
+      "password": "$2a$10$Nz5lifwELq/80H977h1eJuY90ktDtjqFtpBAjDyrEjtCB.s/z9noG",
       "role": "USER",
       "name": "Regular User 1"
     },
     {
       "id": "4",
       "username": "user2",
-      "password": "hashed_password_here",
+      "password": "$2a$10$y6d.nZ//Tis4DBsDBUrTB.WSTGWmUF4yinCZ4NSA8cSSiuLLHdWO.",
       "role": "USER",
       "name": "Regular User 2"
     },
     {
       "id": "5",
       "username": "user3",
-      "password": "hashed_password_here",
+      "password": "$2a$10$Tii0jXzkRnD5IZn4YuwQiu5gwhU0umA/Wenr/dVVr1iH2.e/EY2C6",
       "role": "USER",
       "name": "Regular User 3"
     }
   ]
-} 
+}

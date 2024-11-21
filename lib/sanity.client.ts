@@ -1,15 +1,35 @@
 import { createClient } from 'next-sanity'
+import { Event } from '@/lib/types'
 
-export const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
+
+if (!projectId || !dataset) {
+  throw new Error('Missing Sanity configuration')
+}
+
+// Klient publiczny (bez tokena) do odczytu
+export const publicClient = createClient({
+  projectId,
+  dataset,
   apiVersion: '2024-03-13',
-  useCdn: process.env.NODE_ENV === 'production',
+  useCdn: true,
+  stega: false
 })
 
-export async function getFeaturedEvents() {
-  const events = await client.fetch(`
-    *[_type == "event"] | order(_createdAt desc) [0...3] {
+// Klient z tokenem do operacji zapisu
+export const client = createClient({
+  projectId,
+  dataset,
+  apiVersion: '2024-03-13',
+  token: process.env.SANITY_API_TOKEN,
+  useCdn: false,
+  stega: false
+})
+
+export async function getFeaturedEvents(): Promise<Event[]> {
+  try {
+    const query = `*[_type == "event" && defined(isFeatured)] | order(_createdAt desc) [0...3] {
       _id,
       title,
       "slug": slug.current,
@@ -20,22 +40,19 @@ export async function getFeaturedEvents() {
       imageUrl,
       category,
       isFeatured
-    }
-  `)
-
-  if (!events) {
+    }`
+    
+    const events = await publicClient.fetch<Event[]>(query)
+    return events || []
+  } catch (error) {
+    console.error('Error fetching featured events:', error)
     return []
   }
-
-  return events.map(event => ({
-    ...event,
-    slug: { current: event.slug || `event-${event._id}` }
-  }))
 }
 
-export async function getAllEvents() {
-  const events = await client.fetch(`
-    *[_type == "event"] | order(date asc) {
+export async function getAllEvents(): Promise<Event[]> {
+  try {
+    const query = `*[_type == "event"] | order(date asc) {
       _id,
       title,
       "slug": slug.current,
@@ -46,23 +63,45 @@ export async function getAllEvents() {
       imageUrl,
       category,
       isFeatured
-    }
-  `)
-
-  if (!events) {
+    }`
+    
+    const events = await publicClient.fetch<Event[]>(query)
+    return events || []
+  } catch (error) {
+    console.error('Error fetching all events:', error)
     return []
   }
-
-  return events.map(event => ({
-    ...event,
-    slug: { current: event.slug || `event-${event._id}` }
-  }))
 }
 
-export async function getUpcomingEvents() {
-  const today = new Date().toISOString()
-  const events = await client.fetch(`
-    *[_type == "event" && date > $today] | order(date asc) [0...3] {
+export async function createSampleEvent() {
+  try {
+    const doc = {
+      _type: 'event',
+      title: 'Sample Tech Conference',
+      description: 'A sample tech conference for testing',
+      date: new Date().toISOString(),
+      location: 'Warsaw, Poland',
+      capacity: 100,
+      category: 'Conference',
+      imageUrl: 'https://via.placeholder.com/400',
+      isFeatured: true,
+      slug: {
+        _type: 'slug',
+        current: 'sample-tech-conference'
+      }
+    }
+
+    return await client.create(doc)
+  } catch (error) {
+    console.error('Error creating sample event:', error)
+    return null
+  }
+}
+
+export async function getUpcomingEvents(): Promise<Event[]> {
+  try {
+    const today = new Date().toISOString()
+    const query = `*[_type == "event" && dateTime(date) > dateTime($today)] | order(date asc) [0...3] {
       _id,
       title,
       "slug": slug.current,
@@ -73,21 +112,23 @@ export async function getUpcomingEvents() {
       imageUrl,
       category,
       isFeatured
-    }
-  `, { today })
-
-  return events || []
+    }`
+    
+    const events = await client.fetch<Event[]>(query, { today })
+    return events || []
+  } catch (error) {
+    console.error('Error fetching upcoming events:', error)
+    return []
+  }
 }
 
 export async function getEvent(slug: string) {
-  console.log('Fetching event with slug:', slug)
+  try {
+    if (!slug) {
+      return null
+    }
 
-  if (!slug) {
-    return null
-  }
-
-  const event = await client.fetch(`
-    *[_type == "event" && slug.current == $slug][0] {
+    const query = `*[_type == "event" && slug.current == $slug][0] {
       _id,
       title,
       "slug": slug.current,
@@ -98,16 +139,21 @@ export async function getEvent(slug: string) {
       imageUrl,
       category,
       isFeatured
+    }`
+    
+    const event = await client.fetch(query, { slug })
+    
+    if (!event) {
+      return null
     }
-  `, { slug })
 
-  if (!event) {
+    return {
+      ...event,
+      slug: { current: event.slug || `event-${event._id}` }
+    }
+  } catch (error) {
+    console.error('Error fetching event:', error)
     return null
-  }
-
-  return {
-    ...event,
-    slug: { current: event.slug || `event-${event._id}` }
   }
 }
 
