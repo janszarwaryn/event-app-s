@@ -39,7 +39,11 @@ export async function getFeaturedEvents(): Promise<Event[]> {
       location,
       imageUrl,
       category,
-      isFeatured
+      isFeatured,
+      "createdBy": {
+        "_ref": coalesce(createdBy._ref, ""),
+        "_type": "reference"
+      }
     }`
     
     const events = await publicClient.fetch<Event[]>(query)
@@ -62,13 +66,17 @@ export async function getAllEvents(): Promise<Event[]> {
       location,
       imageUrl,
       category,
-      isFeatured
+      isFeatured,
+      "createdBy": {
+        "_ref": coalesce(createdBy._ref, ""),
+        "_type": "reference"
+      }
     }`
     
     const events = await publicClient.fetch<Event[]>(query)
     return events || []
   } catch (error) {
-    console.error('Error fetching all events:', error)
+    console.error('Error fetching events:', error)
     return []
   }
 }
@@ -111,7 +119,11 @@ export async function getUpcomingEvents(): Promise<Event[]> {
       location,
       imageUrl,
       category,
-      isFeatured
+      isFeatured,
+      "createdBy": {
+        "_ref": coalesce(createdBy._ref, ""),
+        "_type": "reference"
+      }
     }`
     
     const events = await client.fetch<Event[]>(query, { today })
@@ -138,7 +150,11 @@ export async function getEvent(slug: string) {
       location,
       imageUrl,
       category,
-      isFeatured
+      isFeatured,
+      "createdBy": {
+        "_ref": coalesce(createdBy._ref, ""),
+        "_type": "reference"
+      }
     }`
     
     const event = await client.fetch(query, { slug })

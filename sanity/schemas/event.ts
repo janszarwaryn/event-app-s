@@ -44,6 +44,12 @@ export default {
       validation: (Rule: any) => Rule.required()
     },
     {
+      name: 'imageUrl',
+      title: 'Image URL',
+      type: 'url',
+      validation: (Rule: any) => Rule.required()
+    },
+    {
       name: 'category',
       title: 'Category',
       type: 'string',
@@ -53,23 +59,35 @@ export default {
           { title: 'Workshop', value: 'Workshop' },
           { title: 'Meetup', value: 'Meetup' },
           { title: 'Webinar', value: 'Webinar' }
-        ],
-        layout: 'dropdown'
+        ]
       },
       validation: (Rule: any) => Rule.required()
-    },
-    {
-      name: 'imageUrl',
-      title: 'Image URL',
-      type: 'url',
-      description: 'Enter the URL of the event image'
     },
     {
       name: 'isFeatured',
       title: 'Featured Event',
       type: 'boolean',
-      description: 'Set to true to show this event in the featured section',
       initialValue: false
+    },
+    {
+      name: 'createdBy',
+      title: 'Created By',
+      type: 'reference',
+      to: [{ type: 'user' }],
+      validation: (Rule: any) => Rule.required()
     }
-  ]
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      user: 'createdBy.name'
+    },
+    prepare(selection: any) {
+      const {title, user} = selection
+      return {
+        title: title,
+        subtitle: `Created by ${user}`
+      }
+    }
+  }
 } 

@@ -9,4 +9,10 @@ export interface Event {
   imageUrl: string;
   category: string;
   isFeatured: boolean;
+  createdBy?: {
+    _ref: string;
+    _type: 'reference';
+    name?: string;
+    username?: string;
+  };
 } 
