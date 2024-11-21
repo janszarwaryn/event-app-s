@@ -25,6 +25,33 @@ export const client = createClient({
   stega: false
 })
 
+export async function getAllEvents(): Promise<Event[]> {
+  try {
+    const query = `*[_type == "event"] | order(date asc) {
+      _id,
+      title,
+      "slug": slug.current,
+      description,
+      date,
+      capacity,
+      location,
+      imageUrl,
+      category,
+      isFeatured,
+      "createdBy": {
+        "_ref": coalesce(createdBy._ref, ""),
+        "_type": "reference"
+      }
+    }`
+    
+    const events = await publicClient.fetch<Event[]>(query)
+    return events || []
+  } catch (error) {
+    console.error('Error fetching events:', error)
+    return []
+  }
+}
+
 export async function getFeaturedEvents(): Promise<Event[]> {
   try {
     const query = `*[_type == "event" && defined(isFeatured)] | order(_createdAt desc) [0...3] {

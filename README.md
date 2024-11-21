@@ -1,5 +1,10 @@
 # Event Platform - Recruitment Task
 
+![img.png](img.png)
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
+![img_3.png](img_3.png)
+
 ## 🎯 Project Overview
 A full-stack event management platform built with Next.js 15, Sanity CMS, and NextAuth. Created as a recruitment task demonstrating modern web development practices.
 
