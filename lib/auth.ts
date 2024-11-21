@@ -1,7 +1,8 @@
 import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { compare } from "bcryptjs"
-import { users } from '@/config/users.json'
+import usersData from '@/config/users.json'
+const { users } = usersData
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,

@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache'
 export async function PUT(request: Request) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -17,7 +17,6 @@ export async function PUT(request: Request) {
 
     const event = await request.json()
 
-    // Zaktualizuj dokument w Sanity
     const result = await client
       .patch(event._id)
       .set({
@@ -28,12 +27,10 @@ export async function PUT(request: Request) {
         capacity: parseInt(event.capacity),
         category: event.category,
         imageUrl: event.imageUrl,
-        // Tylko admin może zmieniać status featured
         ...(session.user.role === 'ADMIN' && { isFeatured: event.isFeatured })
       })
       .commit()
 
-    // Pobierz zaktualizowany event z pełnymi danymi
     const updatedEvent = await client.fetch(
       `*[_type == "event" && _id == $id][0]{
         _id,
@@ -54,7 +51,6 @@ export async function PUT(request: Request) {
       { id: event._id }
     )
 
-    // Revalidate paths
     revalidatePath('/dashboard')
     revalidatePath('/events')
     revalidatePath('/')
@@ -67,11 +63,11 @@ export async function PUT(request: Request) {
   } catch (error: any) {
     console.error('Error updating event:', error)
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to update event',
         details: error.message
       },
       { status: 500 }
     )
   }
-} 
+}

@@ -7,7 +7,6 @@ export default withAuth(
     const isAdmin = token?.role === "ADMIN"
     const path = req.nextUrl.pathname
 
-    // Protect admin routes
     if (path.startsWith("/dashboard/users") && !isAdmin) {
       return NextResponse.redirect(new URL("/dashboard", req.url))
     }
@@ -23,4 +22,4 @@ export default withAuth(
 
 export const config = {
   matcher: ["/dashboard/:path*"]
-} 
+}

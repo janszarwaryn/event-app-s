@@ -31,8 +31,6 @@ Modifications to this file are automatically discarded.
     return {publish, subscribe, subscribers}
   })()
 
-  // NOTE: Store the error channel instance in the global scope so that the Studio application can
-  // access it and subscribe to errors.
   window.__sanityErrorChannel = {
     subscribe: errorChannel.subscribe,
   }
@@ -43,8 +41,6 @@ Modifications to this file are automatically discarded.
 
   function _handleError(error, params) {
     _nextTick(function () {
-      // - If there are error channel subscribers, then we notify them (no console error).
-      // - If there are no subscribers, then we log the error to the console and render the error overlay.
       if (errorChannel.subscribers.length) {
         errorChannel.publish({error, params})
       } else {
@@ -115,11 +111,6 @@ Modifications to this file are automatically discarded.
     document.body.appendChild(errorElement)
   }
 
-  // NOTE:
-  // Yes – we're attaching 2 error listeners below 👀
-  // This is because React makes the same error throw twice (in development mode).
-  // See: https://github.com/facebook/react/issues/10384
-
   // Error listener #1
   window.onerror = function (event, source, lineno, colno, error) {
     _nextTick(function () {
@@ -141,8 +132,6 @@ Modifications to this file are automatically discarded.
       })
     })
 
-    // IMPORTANT: this callback must return `true` to prevent the error from being rendered in
-    // the browser’s console.
     return true
   }
 

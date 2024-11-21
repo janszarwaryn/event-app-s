@@ -50,4 +50,32 @@ export async function getFeaturedEvents(): Promise<Event[]> {
     console.error('Error fetching featured events:', error)
     return []
   }
+}
+
+export async function getUpcomingEvents(): Promise<Event[]> {
+  try {
+    const today = new Date().toISOString()
+    const query = `*[_type == "event" && dateTime(date) > dateTime($today)] | order(date asc) [0...3] {
+      _id,
+      title,
+      "slug": slug.current,
+      description,
+      date,
+      capacity,
+      location,
+      imageUrl,
+      category,
+      isFeatured,
+      "createdBy": {
+        "_ref": coalesce(createdBy._ref, ""),
+        "_type": "reference"
+      }
+    }`
+    
+    const events = await client.fetch<Event[]>(query, { today })
+    return events || []
+  } catch (error) {
+    console.error('Error fetching upcoming events:', error)
+    return []
+  }
 } 
